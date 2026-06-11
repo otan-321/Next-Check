@@ -1,0 +1,6 @@
+{
+  "name": "Next Check",
+  "description": "Premium editorial monochrome finance tracker and budget planner with custom bank and e-wallet support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
