@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   LayoutDashboard,
   Wallet,
@@ -607,7 +608,7 @@ export default function App() {
         <nav className="flex-1 space-y-1">
           <button
             onClick={() => setCurrentView('dashboard')}
-            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all text-left group ${
+            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'dashboard'
                 ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
                 : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
@@ -619,7 +620,7 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('accounts')}
-            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all text-left group ${
+            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'accounts'
                 ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
                 : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
@@ -631,7 +632,7 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('budget')}
-            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all text-left group ${
+            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'budget'
                 ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
                 : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
@@ -643,7 +644,7 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('reports')}
-            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all text-left group ${
+            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'reports'
                 ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
                 : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
@@ -655,7 +656,7 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('settings')}
-            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all text-left group ${
+            className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'settings'
                 ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
                 : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
@@ -1657,8 +1658,8 @@ export default function App() {
 
       {/* --- MODAL 1: ADD TRANSACTION (Exactly styled to mockup screen 4) --- */}
       {isAddTransactionOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-lg border border-border-fine flex flex-col max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
+          <div className="bg-white w-full max-w-lg border border-border-fine flex flex-col max-h-[90vh] overflow-hidden animate-modalIn">
             
             {/* Modal Header */}
             <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
@@ -1833,8 +1834,8 @@ export default function App() {
 
       {/* --- MODAL 2: ADD CUSTOM ACCOUNT --- */}
       {isAddAccountOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-md border border-border-fine flex flex-col">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
+          <div className="bg-white w-full max-w-md border border-border-fine flex flex-col animate-modalIn">
             <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
               <h3 className="text-lg font-bold text-black tracking-tight">Add Custom Account</h3>
               <button onClick={() => setIsAddAccountOpen(false)}>
@@ -1979,8 +1980,8 @@ export default function App() {
 
       {/* --- MODAL 3: INTERNAL ACCOUNT TRANSFER QUICK TOOL --- */}
       {isTransferOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-md border border-border-fine flex flex-col">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
+          <div className="bg-white w-full max-w-md border border-border-fine flex flex-col animate-modalIn">
             <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
               <h3 className="text-lg font-bold text-black tracking-tight">Internal Account Transfer</h3>
               <button onClick={() => setIsTransferOpen(false)}>
@@ -2065,8 +2066,8 @@ export default function App() {
 
       {/* --- MODAL 4: NEW SAVINGS GOAL TARGET --- */}
       {isGoalModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-sm border border-border-fine flex flex-col">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
+          <div className="bg-white w-full max-w-sm border border-border-fine flex flex-col animate-modalIn">
             <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
               <h3 className="text-base font-bold text-black tracking-tight">Create Milestone Savings Goal</h3>
               <button onClick={() => setIsGoalModalOpen(false)}>
@@ -2199,7 +2200,7 @@ export default function App() {
         {/* Dashboard Home selection link */}
         <button
           onClick={() => setCurrentView('dashboard')}
-          className={`flex flex-col items-center justify-center transition-all ${
+          className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             currentView === 'dashboard' ? 'text-black font-extrabold scale-110' : 'text-zinc-400'
           }`}
         >
@@ -2210,7 +2211,7 @@ export default function App() {
         {/* Accounts linked selection link */}
         <button
           onClick={() => setCurrentView('accounts')}
-          className={`flex flex-col items-center justify-center transition-all ${
+          className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             currentView === 'accounts' ? 'text-black font-extrabold scale-110' : 'text-zinc-400'
           }`}
         >
@@ -2232,7 +2233,7 @@ export default function App() {
         {/* Budget Planner selection link */}
         <button
           onClick={() => setCurrentView('budget')}
-          className={`flex flex-col items-center justify-center transition-all ${
+          className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             currentView === 'budget' ? 'text-black font-extrabold scale-110' : 'text-zinc-400'
           }`}
         >
@@ -2243,7 +2244,7 @@ export default function App() {
         {/* Configuration select link */}
         <button
           onClick={() => setCurrentView('settings')}
-          className={`flex flex-col items-center justify-center transition-all ${
+          className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             currentView === 'settings' ? 'text-black font-bold scale-110' : 'text-zinc-400'
           }`}
         >
