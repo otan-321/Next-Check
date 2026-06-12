@@ -696,13 +696,13 @@ export default function App() {
             <Bell className="w-5 h-5 text-zinc-400 hover:text-black duration-150 cursor-pointer" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-black border border-white rounded-full"></span>
           </div>
-          <div className="w-8 h-8 rounded-full bg-zinc-100 overflow-hidden border border-zinc-200">
-            <img
-              alt="User profile"
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2xDHiFgg0ErX4wnuoCglHwv-at0aH9W8EvcLMZg0AH9AIFwz4cBaxGyDd6NfPSzfmRBe6lG2tMCVZYP-CarrVgFk_DK4pq8reXHWL0lgDr9GtsId-Xb8b-OL1-WtH9eD0nem1bIVf2cjEqXUI4JqPQBF1vj6ryaO40xLHk-Yb-Gh_OSgc7TJtPx6fbLFQKIRmEa-IgBL3FU2mmTIV69q57vhCpH8vC_QMWIoUCd0nnEiriK5u2p3igOXb6zI5vqegTLpO92PEKNcN"
-            />
-          </div>
+          <button
+            onClick={() => setCurrentView('settings')}
+            className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-black duration-150"
+            title="Profile / Settings"
+          >
+            <User className="w-4 h-4" />
+          </button>
         </div>
       </header>
 
