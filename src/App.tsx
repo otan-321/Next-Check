@@ -95,6 +95,10 @@ export default function App() {
     localStorage.setItem('ledger_settings', JSON.stringify(settings));
   }, [settings]);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', settings.darkMode);
+  }, [settings.darkMode]);
+
   // --- UI Routing State ---
   // views: 'dashboard' | 'accounts' | 'budget' | 'reports' | 'settings'
   const [currentView, setCurrentView] = useState<'dashboard' | 'accounts' | 'budget' | 'reports' | 'settings'>('dashboard');
@@ -596,12 +600,12 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen text-on-surface bg-background flex flex-col md:flex-row pb-24 md:pb-0 font-sans`}>
+    <div className={`min-h-screen text-ink bg-page flex flex-col md:flex-row pb-24 md:pb-0 font-sans`}>
       {/* 280px left Fixed Sidebar for Desktop/Web navigations */}
-      <aside className="fixed hidden md:flex left-0 top-0 h-screen w-[280px] bg-white border-r border-border-fine flex-col py-8 px-6 z-40">
+      <aside className="fixed hidden md:flex left-0 top-0 h-screen w-[280px] bg-surface border-r border-border-fine flex-col py-8 px-6 z-40">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-black tracking-tight leading-none">Next Check</h1>
-          <p className="text-[10px] text-zinc-400 font-semibold tracking-widest uppercase mt-1">Premium Finance</p>
+          <h1 className="text-3xl font-bold text-ink tracking-tight leading-none">Next Check</h1>
+          <p className="text-[10px] text-ink-muted font-semibold tracking-widest uppercase mt-1">Premium Finance</p>
         </div>
 
         {/* Tab Selection Navigation */}
@@ -610,8 +614,8 @@ export default function App() {
             onClick={() => setCurrentView('dashboard')}
             className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'dashboard'
-                ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
-                : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
+                ? 'text-ink font-bold border-r-4 border-black bg-surface-mid'
+                : 'text-ink-muted hover:text-ink hover:bg-surface-low'
             }`}
           >
             <LayoutDashboard className="w-5 h-5" />
@@ -622,8 +626,8 @@ export default function App() {
             onClick={() => setCurrentView('accounts')}
             className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'accounts'
-                ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
-                : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
+                ? 'text-ink font-bold border-r-4 border-black bg-surface-mid'
+                : 'text-ink-muted hover:text-ink hover:bg-surface-low'
             }`}
           >
             <Wallet className="w-5 h-5" />
@@ -634,8 +638,8 @@ export default function App() {
             onClick={() => setCurrentView('budget')}
             className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'budget'
-                ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
-                : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
+                ? 'text-ink font-bold border-r-4 border-black bg-surface-mid'
+                : 'text-ink-muted hover:text-ink hover:bg-surface-low'
             }`}
           >
             <PiggyBank className="w-5 h-5" />
@@ -646,8 +650,8 @@ export default function App() {
             onClick={() => setCurrentView('reports')}
             className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'reports'
-                ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
-                : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
+                ? 'text-ink font-bold border-r-4 border-black bg-surface-mid'
+                : 'text-ink-muted hover:text-ink hover:bg-surface-low'
             }`}
           >
             <TrendingUp className="w-5 h-5" />
@@ -658,8 +662,8 @@ export default function App() {
             onClick={() => setCurrentView('settings')}
             className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-left group ${
               currentView === 'settings'
-                ? 'text-black font-bold border-r-4 border-black bg-zinc-100'
-                : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
+                ? 'text-ink font-bold border-r-4 border-black bg-surface-mid'
+                : 'text-ink-muted hover:text-ink hover:bg-surface-low'
             }`}
           >
             <Settings className="w-5 h-5" />
@@ -680,26 +684,26 @@ export default function App() {
       </aside>
 
       {/* Persistent Mobile Sticky Header */}
-      <header className="fixed md:hidden top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-border-fine px-5 h-16 flex items-center justify-between">
+      <header className="fixed md:hidden top-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border-fine px-5 h-16 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-black leading-none">Next Check</h1>
-          <p className="text-[8px] text-zinc-400 font-bold tracking-widest uppercase">Premium Finance</p>
+          <h1 className="text-xl font-bold tracking-tight text-ink leading-none">Next Check</h1>
+          <p className="text-[8px] text-ink-muted font-bold tracking-widest uppercase">Premium Finance</p>
         </div>
         <div className="flex items-center gap-4">
           <button
             onClick={() => setIsAddTransactionOpen(true)}
-            className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-black"
+            className="w-8 h-8 rounded-full bg-surface-mid flex items-center justify-center text-ink"
             title="Quick Transaction"
           >
             <Plus className="w-4 h-4" />
           </button>
           <div className="relative">
-            <Bell className="w-5 h-5 text-zinc-400 hover:text-black duration-150 cursor-pointer" />
+            <Bell className="w-5 h-5 text-ink-muted hover:text-ink duration-150 cursor-pointer" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-black border border-white rounded-full"></span>
           </div>
           <button
             onClick={() => setCurrentView('settings')}
-            className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-black duration-150"
+            className="w-8 h-8 rounded-full bg-surface-mid border border-border-fine flex items-center justify-center text-ink-muted hover:text-ink duration-150"
             title="Profile / Settings"
           >
             <User className="w-4 h-4" />
@@ -718,14 +722,14 @@ export default function App() {
               {/* Header Titles Row */}
               <div className="flex justify-between items-end">
                 <div>
-                  <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-bold mb-1.5 block">Monthly Overview</span>
-                  <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-black flex items-center gap-3">
+                  <span className="text-[10px] text-ink-muted uppercase tracking-widest font-bold mb-1.5 block">Monthly Overview</span>
+                  <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-ink flex items-center gap-3">
                     Dashboard
                   </h2>
                 </div>
 
                 {/* Monthly/Quarter/Year Segment Filter */}
-                <div className="flex items-center gap-1 border border-border-fine p-1 bg-white">
+                <div className="flex items-center gap-1 border border-border-fine p-1 bg-surface">
                   {(['MONTH', 'QUARTER', 'YEAR'] as const).map(p => (
                     <button
                       key={p}
@@ -733,7 +737,7 @@ export default function App() {
                       className={`px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase transition-all duration-150 ${
                         dashboardPeriod === p
                           ? 'bg-black text-white'
-                          : 'text-zinc-400 hover:text-black hover:bg-zinc-50'
+                          : 'text-ink-muted hover:text-ink hover:bg-surface-low'
                       }`}
                     >
                       {p}
@@ -743,12 +747,12 @@ export default function App() {
               </div>
 
               {accounts.length === 0 ? (
-                <div className="bg-white border border-border-fine p-12 text-center max-w-lg mx-auto my-12 animate-fadeIn flex flex-col items-center">
-                  <div className="w-14 h-14 bg-zinc-50 border border-zinc-205 flex items-center justify-center mb-6">
-                    <Sliders className="w-6 h-6 text-black" />
+                <div className="bg-surface border border-border-fine p-12 text-center max-w-lg mx-auto my-12 animate-fadeIn flex flex-col items-center">
+                  <div className="w-14 h-14 bg-surface-low border border-border-fine flex items-center justify-center mb-6">
+                    <Sliders className="w-6 h-6 text-ink" />
                   </div>
-                  <h3 className="text-xl font-extrabold text-black tracking-tight mb-2">Workspace Unconfigured</h3>
-                  <p className="text-zinc-500 text-xs leading-relaxed max-w-sm mb-8">
+                  <h3 className="text-xl font-extrabold text-ink tracking-tight mb-2">Workspace Unconfigured</h3>
+                  <p className="text-ink-muted text-xs leading-relaxed max-w-sm mb-8">
                     Welcome to Next Check. Your premium offline finance log is ready. Start by opening your first custom wallet or seed our premium mockup sandbox.
                   </p>
                   <div className="flex flex-col gap-3 w-full">
@@ -761,7 +765,7 @@ export default function App() {
                     </button>
                     <button
                       onClick={handleResetData}
-                      className="border border-black text-black hover:bg-zinc-50 py-3.5 px-6 font-bold text-xs uppercase tracking-widest active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                      className="border border-black text-ink hover:bg-surface-low py-3.5 px-6 font-bold text-xs uppercase tracking-widest active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                     >
                       <RotateCcw className="w-4 h-4" />
                       Load Demo Sandbox
@@ -774,19 +778,19 @@ export default function App() {
                   <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 {/* Available Balance card */}
-                <div className="col-span-1 lg:col-span-8 bg-white border border-border-fine p-8 flex flex-col justify-between min-h-[340px] relative overflow-hidden">
+                <div className="col-span-1 lg:col-span-8 bg-surface border border-border-fine p-8 flex flex-col justify-between min-h-[340px] relative overflow-hidden">
                   
                   {/* Top line currency selection */}
                   <div>
                     <div className="flex justify-between items-start mb-6">
-                      <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">Total Available Balance</span>
+                      <span className="text-[10px] text-ink-muted uppercase tracking-widest font-bold">Total Available Balance</span>
                       
                       {/* Interactive currency slider toggle */}
-                      <div className="flex items-center gap-3 text-[10px] font-bold tracking-wider text-zinc-400">
-                        <span className={dashboardCurrency === 'PHP' ? 'text-zinc-300 font-medium' : 'text-black'}>USD</span>
+                      <div className="flex items-center gap-3 text-[10px] font-bold tracking-wider text-ink-muted">
+                        <span className={dashboardCurrency === 'PHP' ? 'text-ink-faint font-medium' : 'text-ink'}>USD</span>
                         <div
                           onClick={() => setDashboardCurrency(prev => prev === 'PHP' ? 'USD' : 'PHP')}
-                          className="w-10 h-5 bg-zinc-200 rounded-full relative p-0.5 cursor-pointer select-none"
+                          className="w-10 h-5 bg-surface-mid rounded-full relative p-0.5 cursor-pointer select-none"
                         >
                           <div
                             className={`w-4 h-4 bg-black rounded-full transition-all duration-150 ${
@@ -794,12 +798,12 @@ export default function App() {
                             }`}
                           ></div>
                         </div>
-                        <span className={dashboardCurrency === 'PHP' ? 'text-black' : 'text-zinc-300 font-medium'}>PHP</span>
+                        <span className={dashboardCurrency === 'PHP' ? 'text-ink' : 'text-ink-faint font-medium'}>PHP</span>
                       </div>
                     </div>
 
                     {/* Bold Balance figure */}
-                    <h3 className="text-4xl md:text-5xl font-black text-black tracking-tighter mb-2 font-tabular">
+                    <h3 className="text-4xl md:text-5xl font-black text-ink tracking-tighter mb-2 font-tabular">
                       {formatCurrencyValue(totalBalancePHP, dashboardCurrency)}
                     </h3>
 
@@ -811,22 +815,22 @@ export default function App() {
                   </div>
 
                   {/* Summary metric rows */}
-                  <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-border-fine">
-                    <div>
-                      <p className="text-[9px] text-zinc-400 uppercase tracking-widest font-bold mb-1">Monthly Income</p>
-                      <p className="text-lg md:text-xl font-bold text-black font-tabular">
+                  <div className="grid grid-cols-3 gap-2 md:gap-4 mt-8 pt-6 border-t border-border-fine">
+                    <div className="min-w-0">
+                      <p className="text-[9px] text-ink-muted uppercase tracking-widest font-bold mb-1 truncate">Monthly Income</p>
+                      <p className="text-sm md:text-xl font-bold text-ink font-tabular truncate">
                         {formatCurrencyValue(monthlyIncomePHP, dashboardCurrency)}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-[9px] text-zinc-400 uppercase tracking-widest font-bold mb-1">Monthly Expenses</p>
-                      <p className="text-lg md:text-xl font-bold text-black font-tabular">
+                    <div className="min-w-0">
+                      <p className="text-[9px] text-ink-muted uppercase tracking-widest font-bold mb-1 truncate">Monthly Expenses</p>
+                      <p className="text-sm md:text-xl font-bold text-ink font-tabular truncate">
                         {formatCurrencyValue(monthlyExpensesPHP, dashboardCurrency)}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-[9px] text-zinc-400 uppercase tracking-widest font-bold mb-1">Savings Rate</p>
-                      <p className="text-lg md:text-xl font-bold text-black font-tabular">{savingsRate}%</p>
+                    <div className="min-w-0">
+                      <p className="text-[9px] text-ink-muted uppercase tracking-widest font-bold mb-1 truncate">Savings Rate</p>
+                      <p className="text-sm md:text-xl font-bold text-ink font-tabular truncate">{savingsRate}%</p>
                     </div>
                   </div>
                 </div>
@@ -863,17 +867,17 @@ export default function App() {
               <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 {/* Cash Flow Grayscale overview bar chart */}
-                <div className="col-span-1 lg:col-span-7 bg-white border border-border-fine p-6 md:p-8 flex flex-col justify-between">
+                <div className="col-span-1 lg:col-span-7 bg-surface border border-border-fine p-6 md:p-8 flex flex-col justify-between">
                   <div className="flex justify-between items-center mb-8">
-                    <h4 className="text-xl font-bold text-black tracking-tight">Cash Flow</h4>
+                    <h4 className="text-xl font-bold text-ink tracking-tight">Cash Flow</h4>
                     <div className="flex items-center gap-4 text-[10px] font-bold">
-                      <div className="flex items-center gap-1.5 text-black">
+                      <div className="flex items-center gap-1.5 text-ink">
                         <span className="w-2.5 h-2.5 bg-black"></span>
-                        <span className="uppercase text-zinc-400">Income</span>
+                        <span className="uppercase text-ink-muted">Income</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-black">
-                        <span className="w-2.5 h-2.5 bg-zinc-300"></span>
-                        <span className="uppercase text-zinc-400">Expense</span>
+                      <div className="flex items-center gap-1.5 text-ink">
+                        <span className="w-2.5 h-2.5 bg-ink-faint"></span>
+                        <span className="uppercase text-ink-muted">Expense</span>
                       </div>
                     </div>
                   </div>
@@ -894,7 +898,7 @@ export default function App() {
                       
                       return (
                         <div key={i} className="flex-1 flex flex-col font-sans group items-center">
-                          <div className="w-full flex justify-center items-end gap-1 h-44 relative bg-zinc-50 border-t border-zinc-100 pt-2 px-1">
+                          <div className="w-full flex justify-center items-end gap-1 h-44 relative bg-surface-low border-t border-border-fine pt-2 px-1">
                             {/* Income Bar (pure black) */}
                             <div
                               style={{ height: `${incHeight}%` }}
@@ -904,11 +908,11 @@ export default function App() {
                             {/* Expense Bar (gray) */}
                             <div
                               style={{ height: `${expHeight}%` }}
-                              className="w-full bg-zinc-300 hover:opacity-80 duration-100 cursor-pointer self-end"
+                              className="w-full bg-ink-faint hover:opacity-80 duration-100 cursor-pointer self-end"
                               title={`Expense: ₱${bar.expense}`}
                             ></div>
                           </div>
-                          <span className="text-[10px] text-zinc-400 uppercase tracking-wider font-bold mt-3 block">{bar.m}</span>
+                          <span className="text-[10px] text-ink-muted uppercase tracking-wider font-bold mt-3 block">{bar.m}</span>
                         </div>
                       );
                     })}
@@ -916,9 +920,9 @@ export default function App() {
                 </div>
 
                 {/* Budget Progress visual checklist on Home */}
-                <div className="col-span-1 lg:col-span-5 bg-white border border-border-fine p-6 md:p-8 flex flex-col justify-between">
+                <div className="col-span-1 lg:col-span-5 bg-surface border border-border-fine p-6 md:p-8 flex flex-col justify-between">
                   <div>
-                    <h4 className="text-xl font-bold text-black tracking-tight mb-8">Budget Progress</h4>
+                    <h4 className="text-xl font-bold text-ink tracking-tight mb-8">Budget Progress</h4>
                     
                     <div className="space-y-6">
                       {budgets.slice(1, 4).map(b => {
@@ -930,12 +934,12 @@ export default function App() {
                         return (
                           <div key={b.id} className="space-y-2">
                             <div className="flex justify-between items-end font-tabular">
-                              <span className="text-sm font-semibold text-black">{b.category}</span>
-                              <span className={`text-[11px] font-bold ${isNearingLimit ? 'text-red-600' : 'text-zinc-500'}`}>
+                              <span className="text-sm font-semibold text-ink">{b.category}</span>
+                              <span className={`text-[11px] font-bold ${isNearingLimit ? 'text-red-600' : 'text-ink-muted'}`}>
                                 {formatCurrencyValue(spent, dashboardCurrency)} / {formatCurrencyValue(b.amount, dashboardCurrency)}
                               </span>
                             </div>
-                            <div className="h-1.5 w-full bg-zinc-100 overflow-hidden">
+                            <div className="h-1.5 w-full bg-surface-mid overflow-hidden">
                               <div
                                 style={{ width: pctStr }}
                                 className={`h-full transition-all duration-300 ${
@@ -961,15 +965,15 @@ export default function App() {
               </section>
 
               {/* Transactions Activity Feed list rows */}
-              <section className="bg-white border border-border-fine">
+              <section className="bg-surface border border-border-fine">
                 <div className="p-6 md:p-8 border-b border-border-fine flex justify-between items-center">
-                  <h4 className="text-xl font-bold text-black tracking-tight">Recent Transactions</h4>
+                  <h4 className="text-xl font-bold text-ink tracking-tight">Recent Transactions</h4>
                   <button
                     onClick={() => {
                       // switch to accounts view lower table or settings
                       setCurrentView('accounts');
                     }}
-                    className="text-zinc-500 hover:text-black font-semibold text-xs uppercase tracking-wider underline"
+                    className="text-ink-muted hover:text-ink font-semibold text-xs uppercase tracking-wider underline"
                   >
                     View All Activity
                   </button>
@@ -982,7 +986,7 @@ export default function App() {
                     const isIncoming = tx.type === 'Income';
 
                     return (
-                      <div key={tx.id} className="p-5 md:p-6 flex items-center hover:bg-zinc-50 transition-colors group cursor-pointer justify-between">
+                      <div key={tx.id} className="p-5 md:p-6 flex items-center hover:bg-surface-low transition-colors group cursor-pointer justify-between">
                         <div className="flex items-center gap-4">
                           {/* leading circle colored container or fallback */}
                           <div className="w-10 h-10 overflow-hidden shrink-0">
@@ -990,8 +994,8 @@ export default function App() {
                           </div>
                           
                           <div>
-                            <p className="text-sm font-bold text-black line-clamp-1">{tx.note || tx.category}</p>
-                            <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5">
+                            <p className="text-sm font-bold text-ink line-clamp-1">{tx.note || tx.category}</p>
+                            <p className="text-[10px] text-ink-muted font-bold uppercase tracking-wider mt-0.5">
                               {tx.category} • {tx.date} {tx.time}
                             </p>
                           </div>
@@ -1001,7 +1005,7 @@ export default function App() {
                         <div className="flex items-center gap-4">
                           <span
                             className={`text-sm font-bold ${
-                              isIncoming ? 'text-emerald-600' : 'text-black'
+                              isIncoming ? 'text-emerald-600' : 'text-ink'
                             }`}
                           >
                             {isIncoming ? '+' : '-'}{formatCurrencyValue(tx.amount, dashboardCurrency)}
@@ -1024,8 +1028,8 @@ export default function App() {
               {/* Profile Net Worth Rows */}
               <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
                 <div>
-                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5 block">Total Net Worth</span>
-                  <h3 className="text-4xl md:text-5xl font-black text-black tracking-tight font-tabular">
+                  <span className="text-[10px] font-bold text-ink-muted uppercase tracking-widest mb-1.5 block">Total Net Worth</span>
+                  <h3 className="text-4xl md:text-5xl font-black text-ink tracking-tight font-tabular">
                     {formatCurrencyValue(totalBalancePHP)}
                   </h3>
                 </div>
@@ -1033,13 +1037,13 @@ export default function App() {
                 <div className="flex gap-3">
                   <button
                     onClick={handleExportCSV}
-                    className="border border-black text-black px-5 py-2.5 hover:bg-zinc-50 transition-colors text-xs font-semibold uppercase tracking-wider active:scale-95"
+                    className="border border-black text-ink px-5 py-2.5 hover:bg-surface-low transition-colors text-xs font-semibold uppercase tracking-wider active:scale-95"
                   >
                     Export CSV
                   </button>
                   <button
                     onClick={() => setIsTransferOpen(true)}
-                    className="border border-black bg-zinc-100 text-black px-5 py-2.5 hover:bg-zinc-200 transition-colors text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 active:scale-95"
+                    className="border border-black bg-surface-mid text-ink px-5 py-2.5 hover:bg-surface-mid transition-colors text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 active:scale-95"
                   >
                     <ArrowLeftRight className="w-3.5 h-3.5" />
                     Internal Transfer
@@ -1062,8 +1066,8 @@ export default function App() {
                   return (
                     <div
                       key={acc.id}
-                      className={`bg-white border border-border-fine p-6 flex flex-col justify-between min-h-[200px] transition-all hover:scale-[1.01] ${
-                        acc.isArchived ? 'opacity-60 bg-zinc-50' : ''
+                      className={`bg-surface border border-border-fine p-6 flex flex-col justify-between min-h-[200px] transition-all hover:scale-[1.01] ${
+                        acc.isArchived ? 'opacity-60 bg-surface-low' : ''
                       }`}
                     >
                       {/* Logo header row */}
@@ -1071,15 +1075,15 @@ export default function App() {
                         <div className="w-10 h-10 overflow-hidden shrink-0">
                           <InstitutionLogo id={instMeta.id || 'other'} badge={instMeta.badge} />
                         </div>
-                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
+                        <span className="text-[10px] text-ink-muted font-bold uppercase tracking-wider">
                           {acc.type} {acc.isArchived && '(Archived)'}
                         </span>
                       </div>
 
                       {/* Info layout */}
                       <div className="my-4">
-                        <h4 className="text-base font-bold text-black line-clamp-1">{acc.name}</h4>
-                        <p className="text-xs text-zinc-400 mt-1">{acc.accountNumber}</p>
+                        <h4 className="text-base font-bold text-ink line-clamp-1">{acc.name}</h4>
+                        <p className="text-xs text-ink-muted mt-1">{acc.accountNumber}</p>
                       </div>
 
                       {/* Interactive Bottom action bar */}
@@ -1098,7 +1102,7 @@ export default function App() {
                               autoFocus
                               className="border-b border-black text-sm py-1 font-bold w-24 outline-none"
                             />
-                            <p className="text-[9px] text-zinc-400 font-bold">Press Enter</p>
+                            <p className="text-[9px] text-ink-muted font-bold">Press Enter</p>
                           </div>
                         ) : (
                           <p
@@ -1106,7 +1110,7 @@ export default function App() {
                               setEditingAccountId(acc.id);
                               setEditBalanceValue(String(acc.balance));
                             }}
-                            className="text-base font-bold text-black cursor-pointer hover:underline"
+                            className="text-base font-bold text-ink cursor-pointer hover:underline"
                             title="Click to edit balance manually"
                           >
                             {formatValueByAccountCurrency(acc.balance, acc.currency)}
@@ -1116,14 +1120,14 @@ export default function App() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handleToggleArchiveAccount(acc.id)}
-                            className="text-[9px] font-bold text-zinc-400 uppercase hover:text-black tracking-widest mr-1.5"
+                            className="text-[9px] font-bold text-ink-muted uppercase hover:text-ink tracking-widest mr-1.5"
                             title="Toggle Archive"
                           >
                             {acc.isArchived ? 'Unarchive' : 'Archive'}
                           </button>
                           <button
                             onClick={() => handleDeleteAccount(acc.id)}
-                            className="text-zinc-300 hover:text-red-600 transition-colors"
+                            className="text-ink-faint hover:text-red-600 transition-colors"
                             title="Delete Account"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -1137,18 +1141,18 @@ export default function App() {
                 {/* Add new account callout placeholder block matching screenshot 3 bottom card */}
                 <div
                   onClick={() => setIsAddAccountOpen(true)}
-                  className="border-2 border-dashed border-border-fine transition-colors hover:bg-zinc-50 cursor-pointer flex flex-col items-center justify-center min-h-[200px]"
+                  className="border-2 border-dashed border-border-fine transition-colors hover:bg-surface-low cursor-pointer flex flex-col items-center justify-center min-h-[200px]"
                 >
-                  <Plus className="w-8 h-8 text-zinc-300 mb-2" />
-                  <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">Link Account</span>
+                  <Plus className="w-8 h-8 text-ink-faint mb-2" />
+                  <span className="text-[10px] text-ink-muted uppercase tracking-widest font-bold">Link Account</span>
                 </div>
               </div>
 
               {/* Bottom Consolidated Activity Logs Table */}
-              <section className="bg-white border border-border-fine font-tabular">
+              <section className="bg-surface border border-border-fine font-tabular">
                 <div className="p-6 md:p-8 border-b border-border-fine">
-                  <h3 className="text-xl font-bold text-black tracking-tight">Consolidated Activity Logs</h3>
-                  <p className="text-xs text-zinc-400 mt-1">Manual transaction bookkeeping audit history</p>
+                  <h3 className="text-xl font-bold text-ink tracking-tight">Consolidated Activity Logs</h3>
+                  <p className="text-xs text-ink-muted mt-1">Manual transaction bookkeeping audit history</p>
                 </div>
 
                 <div className="divide-y divide-border-fine">
@@ -1158,21 +1162,21 @@ export default function App() {
                     const isIncome = tx.type === 'Income';
 
                     return (
-                      <div key={tx.id} className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-zinc-50 transition-colors">
+                      <div key={tx.id} className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-surface-low transition-colors">
                         <div className="flex items-center gap-4">
                           <div className="w-8 h-8 overflow-hidden shrink-0">
                             <InstitutionLogo id={instMeta.id || 'other'} badge={instMeta.badge} />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-black">{tx.note || tx.category}</p>
-                            <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider mt-0.5">
+                            <p className="text-sm font-bold text-ink">{tx.note || tx.category}</p>
+                            <p className="text-[10px] text-ink-muted font-semibold uppercase tracking-wider mt-0.5">
                               {acc ? acc.name : 'Deleted Account'} • {tx.category} • {tx.date}
                             </p>
                           </div>
                         </div>
 
                         <div className="flex items-center gap-6 justify-between md:justify-end">
-                          <span className={`text-sm font-bold ${isIncome ? 'text-emerald-600' : 'text-zinc-800'}`}>
+                          <span className={`text-sm font-bold ${isIncome ? 'text-emerald-600' : 'text-ink'}`}>
                             {isIncome ? '+' : '-'}{formatCurrencyValue(tx.amount)}
                           </span>
                           <button
@@ -1181,7 +1185,7 @@ export default function App() {
                                 setTransactions(prev => prev.filter(t => t.id !== tx.id));
                               }
                             }}
-                            className="text-zinc-300 hover:text-red-500 duration-150"
+                            className="text-ink-faint hover:text-red-500 duration-150"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -1200,14 +1204,14 @@ export default function App() {
             <div className="space-y-8 animate-fadeIn">
               <div className="flex flex-col md:flex-row justify-between md:items-end gap-4">
                 <div>
-                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5 block">Budget planner</span>
-                  <h2 className="text-4xl font-extrabold tracking-tight text-black">Allocations Overview</h2>
+                  <span className="text-[10px] font-bold text-ink-muted uppercase tracking-widest mb-1.5 block">Budget planner</span>
+                  <h2 className="text-4xl font-extrabold tracking-tight text-ink">Allocations Overview</h2>
                 </div>
 
                 {/* Inline budget adder */}
-                <form onSubmit={handleAddBudget} className="flex flex-wrap items-end gap-3 bg-zinc-50 p-4 border border-zinc-200">
+                <form onSubmit={handleAddBudget} className="flex flex-wrap items-end gap-3 bg-surface-low p-4 border border-border-fine">
                   <div>
-                    <label className="block text-[8px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Category</label>
+                    <label className="block text-[8px] font-bold uppercase tracking-widest text-ink-muted mb-1">Category</label>
                     <select
                       value={newBudgetCategory}
                       onChange={(e) => setNewBudgetCategory(e.target.value)}
@@ -1219,14 +1223,14 @@ export default function App() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[8px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Limit (PHP)</label>
+                    <label className="block text-[8px] font-bold uppercase tracking-widest text-ink-muted mb-1">Limit (PHP)</label>
                     <input
                       type="number"
                       required
                       placeholder="e.g. 5000"
                       value={newBudgetAmount}
                       onChange={(e) => setNewBudgetAmount(e.target.value)}
-                      className="border-b border-zinc-300 focus:border-black py-1.5 bg-transparent text-xs w-28 outline-none font-tabular"
+                      className="border-b border-border-fine focus:border-black py-1.5 bg-transparent text-xs w-28 outline-none font-tabular"
                     />
                   </div>
                   <button
@@ -1247,15 +1251,15 @@ export default function App() {
                   const isDanger = ratio >= 0.85;
 
                   return (
-                    <div key={b.id} className="bg-white border border-border-fine p-6 md:p-8 flex flex-col justify-between space-y-4">
+                    <div key={b.id} className="bg-surface border border-border-fine p-6 md:p-8 flex flex-col justify-between space-y-4">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h4 className="text-lg font-bold text-black">{b.category}</h4>
-                          <p className="text-[10px] text-zinc-400 font-semibold tracking-wider uppercase mt-1">{b.period} Target</p>
+                          <h4 className="text-lg font-bold text-ink">{b.category}</h4>
+                          <p className="text-[10px] text-ink-muted font-semibold tracking-wider uppercase mt-1">{b.period} Target</p>
                         </div>
                         <button
                           onClick={() => handleDeleteBudget(b.id)}
-                          className="text-zinc-300 hover:text-red-500 transition-colors"
+                          className="text-ink-faint hover:text-red-500 transition-colors"
                           title="Remove budget setting"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -1264,14 +1268,14 @@ export default function App() {
 
                       <div className="space-y-2">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span className="text-zinc-500">Progress</span>
-                          <span className={isDanger ? 'text-red-600 font-bold' : 'text-black'}>
+                          <span className="text-ink-muted">Progress</span>
+                          <span className={isDanger ? 'text-red-600 font-bold' : 'text-ink'}>
                             {Math.round(ratio * 100)}% Spent
                           </span>
                         </div>
                         
                         {/* High fidelity thick line bar layout */}
-                        <div className="h-2 w-full bg-zinc-100 overflow-hidden">
+                        <div className="h-2 w-full bg-surface-mid overflow-hidden">
                           <div
                             style={{ width: `${ratio * 100}%` }}
                             className={`h-full transition-all duration-300 ${
@@ -1280,7 +1284,7 @@ export default function App() {
                           ></div>
                         </div>
 
-                        <div className="flex justify-between text-[11px] text-zinc-400 pt-1">
+                        <div className="flex justify-between text-[11px] text-ink-muted pt-1">
                           <span>Spent {formatCurrencyValue(spent)}</span>
                           <span>Limit {formatCurrencyValue(b.amount)}</span>
                         </div>
@@ -1294,7 +1298,7 @@ export default function App() {
                         </div>
                       )}
                       {!isDanger && ratio >= 0.75 && (
-                        <div className="flex items-center gap-1.5 text-zinc-500 bg-zinc-50 p-2.5 text-[10px] font-bold uppercase tracking-wider">
+                        <div className="flex items-center gap-1.5 text-ink-muted bg-surface-low p-2.5 text-[10px] font-bold uppercase tracking-wider">
                           <AlertTriangle className="w-3.5 h-3.5" />
                           Approaching set limit threshold
                         </div>
@@ -1305,15 +1309,15 @@ export default function App() {
               </div>
 
               {/* Savings Goals tracker widget section */}
-              <section className="bg-white border border-border-fine p-6 md:p-8">
+              <section className="bg-surface border border-border-fine p-6 md:p-8">
                 <div className="flex justify-between items-center mb-6">
                   <div>
-                    <h3 className="text-xl font-bold text-black tracking-tight">Active Savings Goal Targets</h3>
-                    <p className="text-xs text-zinc-400 mt-0.5">Simple micro progress indicators for manual milestone assets</p>
+                    <h3 className="text-xl font-bold text-ink tracking-tight">Active Savings Goal Targets</h3>
+                    <p className="text-xs text-ink-muted mt-0.5">Simple micro progress indicators for manual milestone assets</p>
                   </div>
                   <button
                     onClick={() => setIsGoalModalOpen(true)}
-                    className="border border-black px-4 py-2 hover:bg-zinc-50 text-[10px] font-bold uppercase tracking-widest active:scale-95"
+                    className="border border-black px-4 py-2 hover:bg-surface-low text-[10px] font-bold uppercase tracking-widest active:scale-95"
                   >
                     New Goal
                   </button>
@@ -1323,38 +1327,38 @@ export default function App() {
                   {savingsGoals.map(goal => {
                     const pct = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100));
                     return (
-                      <div key={goal.id} className="border-b border-zinc-100 pb-5 last:border-0 last:pb-0">
+                      <div key={goal.id} className="border-b border-border-fine pb-5 last:border-0 last:pb-0">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
                           <div>
-                            <span className="font-bold text-sm text-black">{goal.name}</span>
+                            <span className="font-bold text-sm text-ink">{goal.name}</span>
                             {goal.targetDate && (
-                              <span className="text-[10px] text-zinc-400 uppercase font-black tracking-widest ml-3">
+                              <span className="text-[10px] text-ink-muted uppercase font-black tracking-widest ml-3">
                                 Target Date: {goal.targetDate}
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs text-zinc-400">Current Saved:</span>
+                            <span className="text-xs text-ink-muted">Current Saved:</span>
                             <input
                               type="number"
                               defaultValue={goal.currentAmount}
                               onChange={(e) => handleUpdateGoalProgress(goal.id, e.target.value)}
-                              className="w-24 border-b border-zinc-300 text-xs py-0.5 px-1 font-bold focus:border-black outline-none font-tabular text-right"
+                              className="w-24 border-b border-border-fine text-xs py-0.5 px-1 font-bold focus:border-black outline-none font-tabular text-right"
                             />
-                            <span className="text-xs font-bold text-zinc-400">of {formatCurrencyValue(goal.targetAmount)}</span>
+                            <span className="text-xs font-bold text-ink-muted">of {formatCurrencyValue(goal.targetAmount)}</span>
                             <button
                               onClick={() => handleDeleteGoal(goal.id)}
-                              className="text-zinc-300 hover:text-red-500 transition-colors ml-2"
+                              className="text-ink-faint hover:text-red-500 transition-colors ml-2"
                             >
                               <X className="w-4.5 h-4.5" />
                             </button>
                           </div>
                         </div>
 
-                        <div className="h-1.5 w-full bg-zinc-100 overflow-hidden">
+                        <div className="h-1.5 w-full bg-surface-mid overflow-hidden">
                           <div style={{ width: `${pct}%` }} className="h-full bg-black"></div>
                         </div>
-                        <div className="text-right text-[10px] font-bold text-zinc-500 mt-1">{pct}% Secured</div>
+                        <div className="text-right text-[10px] font-bold text-ink-muted mt-1">{pct}% Secured</div>
 
                         {/* Live Saving Calculations Engine */}
                         {goal.targetDate && (
@@ -1378,7 +1382,7 @@ export default function App() {
 
                             if (isOverdue) {
                               return (
-                                <div className="mt-2 text-[9px] text-zinc-450 bg-zinc-50 border border-zinc-200 font-extrabold px-2.5 py-1 uppercase tracking-widest inline-block">
+                                <div className="mt-2 text-[9px] text-ink-muted bg-surface-low border border-border-fine font-extrabold px-2.5 py-1 uppercase tracking-widest inline-block">
                                   Passed Target Date
                                 </div>
                               );
@@ -1391,32 +1395,32 @@ export default function App() {
                             const savePerYear = remainingToSave / (daysLeft / 365.25);
 
                             return (
-                              <div className="mt-3 bg-zinc-50 border border-zinc-200 p-3.5 text-xs text-zinc-650 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                              <div className="mt-3 bg-surface-low border border-border-fine p-3.5 text-xs text-ink grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                                 <div>
-                                  <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 block mb-0.5">TO SAVE DAILY</span>
-                                  <span className="font-bold text-black text-[13px]">{formatCurrencyValue(savePerDay, settings.currency)}</span>
+                                  <span className="text-[9px] uppercase tracking-wider font-extrabold text-ink-muted block mb-0.5">TO SAVE DAILY</span>
+                                  <span className="font-bold text-ink text-[13px]">{formatCurrencyValue(savePerDay, settings.currency)}</span>
                                 </div>
                                 {daysLeft >= 7 && (
                                   <div>
-                                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 block mb-0.5">TO SAVE WEEKLY</span>
-                                    <span className="font-bold text-black text-[13px]">{formatCurrencyValue(savePerWeek, settings.currency)}</span>
+                                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-ink-muted block mb-0.5">TO SAVE WEEKLY</span>
+                                    <span className="font-bold text-ink text-[13px]">{formatCurrencyValue(savePerWeek, settings.currency)}</span>
                                   </div>
                                 )}
                                 {daysLeft >= 30 && (
                                   <div>
-                                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 block mb-0.5">TO SAVE MONTHLY</span>
-                                    <span className="font-bold text-black text-[13px]">{formatCurrencyValue(savePerMonth, settings.currency)}</span>
+                                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-ink-muted block mb-0.5">TO SAVE MONTHLY</span>
+                                    <span className="font-bold text-ink text-[13px]">{formatCurrencyValue(savePerMonth, settings.currency)}</span>
                                   </div>
                                 )}
                                 {daysLeft >= 365 && (
                                   <div>
-                                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 block mb-0.5">TO SAVE YEARLY</span>
-                                    <span className="font-bold text-black text-[13px]">{formatCurrencyValue(savePerYear, settings.currency)}</span>
+                                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-ink-muted block mb-0.5">TO SAVE YEARLY</span>
+                                    <span className="font-bold text-ink text-[13px]">{formatCurrencyValue(savePerYear, settings.currency)}</span>
                                   </div>
                                 )}
-                                <div className="col-span-2 sm:col-span-4 text-[9px] text-zinc-400 uppercase tracking-widest font-black border-t border-zinc-200/60 pt-2 flex justify-between">
+                                <div className="col-span-2 sm:col-span-4 text-[9px] text-ink-muted uppercase tracking-widest font-black border-t border-border-fine/60 pt-2 flex justify-between">
                                   <span>TIME RUNWAY</span>
-                                  <span className="text-black">{daysLeft} calendar days left</span>
+                                  <span className="text-ink">{daysLeft} calendar days left</span>
                                 </div>
                               </div>
                             );
@@ -1434,16 +1438,16 @@ export default function App() {
           {currentView === 'reports' && (
             <div className="space-y-8 animate-fadeIn font-tabular">
               <div>
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5 block">Reports &amp; Analytics</span>
-                <h2 className="text-4xl font-extrabold tracking-tight text-black">Consolidated Auditing Graphs</h2>
+                <span className="text-[10px] font-bold text-ink-muted uppercase tracking-widest mb-1.5 block">Reports &amp; Analytics</span>
+                <h2 className="text-4xl font-extrabold tracking-tight text-ink">Consolidated Auditing Graphs</h2>
               </div>
 
               {/* Grid bento layout for spending indicators */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 {/* 1. Category wise spending chart (7 cols) */}
-                <div className="col-span-1 lg:col-span-7 bg-white border border-border-fine p-6 md:p-8">
-                  <h3 className="text-lg font-bold text-black mb-6">Spending Breakdown by Category</h3>
+                <div className="col-span-1 lg:col-span-7 bg-surface border border-border-fine p-6 md:p-8">
+                  <h3 className="text-lg font-bold text-ink mb-6">Spending Breakdown by Category</h3>
                   
                   <div className="space-y-4">
                     {transactionCategories.map(cat => {
@@ -1455,28 +1459,28 @@ export default function App() {
                       return (
                         <div key={cat} className="space-y-1">
                           <div className="flex justify-between text-xs">
-                            <span className="font-semibold text-black">{cat}</span>
-                            <span className="font-bold text-zinc-500">{formatCurrencyValue(spend)}</span>
+                            <span className="font-semibold text-ink">{cat}</span>
+                            <span className="font-bold text-ink-muted">{formatCurrencyValue(spend)}</span>
                           </div>
-                          <div className="h-4 bg-zinc-100">
+                          <div className="h-4 bg-surface-mid">
                             <div style={{ width: pctWidth }} className="h-full bg-black hover:opacity-85 cursor-pointer"></div>
                           </div>
                         </div>
                       );
                     })}
                     {(Object.values(categorySpending) as number[]).filter(v => v > 0).length === 0 && (
-                      <p className="text-xs text-zinc-400 py-8 text-center uppercase tracking-wider">No categorized records found within the current period.</p>
+                      <p className="text-xs text-ink-muted py-8 text-center uppercase tracking-wider">No categorized records found within the current period.</p>
                     )}
                   </div>
                 </div>
 
                 {/* 2. Spending trends overview line graph (5 cols) */}
-                <div className="col-span-1 lg:col-span-5 bg-white border border-border-fine p-6 md:p-8">
-                  <h3 className="text-lg font-bold text-black mb-1">Monthly Spending Trend</h3>
-                  <span className="text-[10px] text-zinc-400 uppercase tracking-wider font-bold mb-4 block">Sept - Oct Timeline</span>
+                <div className="col-span-1 lg:col-span-5 bg-surface border border-border-fine p-6 md:p-8">
+                  <h3 className="text-lg font-bold text-ink mb-1">Monthly Spending Trend</h3>
+                  <span className="text-[10px] text-ink-muted uppercase tracking-wider font-bold mb-4 block">Sept - Oct Timeline</span>
 
                   {/* High fidelity line chart mockup overlay styled in monochrome */}
-                  <div className="h-44 w-full flex items-center justify-center relative mt-6 border-b border-zinc-200">
+                  <div className="h-44 w-full flex items-center justify-center relative mt-6 border-b border-border-fine">
                     <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                       {/* Grid Lines */}
                       <line x1="0" y1="20" x2="100" y2="20" stroke="#E5E5E5" strokeWidth="0.5" strokeDasharray="3" />
@@ -1496,7 +1500,7 @@ export default function App() {
                       <circle cx="45" cy="72" r="2" fill="black" />
                     </svg>
                   </div>
-                  <div className="flex justify-between text-[11px] text-zinc-450 mt-4 font-bold uppercase tracking-wider">
+                  <div className="flex justify-between text-[11px] text-ink-muted mt-4 font-bold uppercase tracking-wider">
                     <span>Sept 01</span>
                     <span>Sept 15</span>
                     <span>Oct 24</span>
@@ -1506,19 +1510,19 @@ export default function App() {
 
               {/* Grid 3: Account wise distribution */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-white border border-border-fine p-6 md:p-8">
-                  <h3 className="text-lg font-bold text-black mb-6">Asset Allocation by Account</h3>
+                <div className="bg-surface border border-border-fine p-6 md:p-8">
+                  <h3 className="text-lg font-bold text-ink mb-6">Asset Allocation by Account</h3>
                   <div className="space-y-4">
                     {accounts.map(acc => {
                       const ratio = totalBalancePHP > 0 ? (acc.balance / totalBalancePHP) * 100 : 0;
                       return (
                         <div key={acc.id} className="flex justify-between items-center text-xs">
-                          <span className="font-semibold text-black">{acc.name}</span>
+                          <span className="font-semibold text-ink">{acc.name}</span>
                           <div className="flex items-center gap-3 w-48 font-tabular">
-                            <div className="h-2 flex-1 bg-zinc-100 overflow-hidden">
+                            <div className="h-2 flex-1 bg-surface-mid overflow-hidden">
                               <div style={{ width: `${ratio}%` }} className="h-full bg-black"></div>
                             </div>
-                            <span className="font-bold text-zinc-500 text-[11px] w-10 text-right">{Math.round(ratio)}%</span>
+                            <span className="font-bold text-ink-muted text-[11px] w-10 text-right">{Math.round(ratio)}%</span>
                           </div>
                         </div>
                       );
@@ -1526,20 +1530,20 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="bg-white border border-border-fine p-6 md:p-8 flex flex-col justify-between">
+                <div className="bg-surface border border-border-fine p-6 md:p-8 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-black mb-1">Monthly Financial Report</h3>
-                    <p className="text-xs text-zinc-400 mt-1">Direct statistics review parameters</p>
+                    <h3 className="text-lg font-bold text-ink mb-1">Monthly Financial Report</h3>
+                    <p className="text-xs text-ink-muted mt-1">Direct statistics review parameters</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="bg-zinc-50 p-4 border border-zinc-200">
-                      <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest block mb-1">Average spent (Day)</span>
-                      <p className="text-xl font-bold text-black">₱{Math.round(monthlyExpensesPHP / 30)}</p>
+                    <div className="bg-surface-low p-4 border border-border-fine">
+                      <span className="text-[9px] text-ink-muted font-bold uppercase tracking-widest block mb-1">Average spent (Day)</span>
+                      <p className="text-xl font-bold text-ink">₱{Math.round(monthlyExpensesPHP / 30)}</p>
                     </div>
-                    <div className="bg-zinc-50 p-4 border border-zinc-200">
-                      <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest block mb-1">Net Flow Balance</span>
-                      <p className={`text-xl font-bold ${monthlyIncomePHP >= monthlyExpensesPHP ? 'text-black' : 'text-red-600'}`}>
+                    <div className="bg-surface-low p-4 border border-border-fine">
+                      <span className="text-[9px] text-ink-muted font-bold uppercase tracking-widest block mb-1">Net Flow Balance</span>
+                      <p className={`text-xl font-bold ${monthlyIncomePHP >= monthlyExpensesPHP ? 'text-ink' : 'text-red-600'}`}>
                         {monthlyIncomePHP >= monthlyExpensesPHP ? '+' : ''}₱{Math.round(monthlyIncomePHP - monthlyExpensesPHP)}
                       </p>
                     </div>
@@ -1553,22 +1557,45 @@ export default function App() {
           {currentView === 'settings' && (
             <div className="space-y-8 animate-fadeIn font-tabular">
               <div>
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5 block">APP SETTINGS</span>
-                <h2 className="text-4xl font-extrabold tracking-tight text-black">Configuration Panel</h2>
+                <span className="text-[10px] font-bold text-ink-muted uppercase tracking-widest mb-1.5 block">APP SETTINGS</span>
+                <h2 className="text-4xl font-extrabold tracking-tight text-ink">Configuration Panel</h2>
               </div>
 
-              <div className="bg-white border border-border-fine divide-y divide-border-fine text-sm">
-                
+              <div className="bg-surface border border-border-fine divide-y divide-border-fine text-sm">
+
+                {/* 0. Dark mode toggle */}
+                <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <span className="font-bold text-ink">Dark Mode</span>
+                    <p className="text-xs text-ink-muted mt-1">Switch the interface to a low-light dark theme</p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={settings.darkMode}
+                    onClick={() => setSettings(prev => ({ ...prev, darkMode: !prev.darkMode }))}
+                    className={`relative w-14 h-8 transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] border border-border-fine ${
+                      settings.darkMode ? 'bg-ink' : 'bg-surface-mid'
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-1 left-1 w-6 h-6 bg-surface transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        settings.darkMode ? 'translate-x-6' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </div>
+
                 {/* 1. Default currency switch */}
                 <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <span className="font-bold text-black">Default Base Currency</span>
-                    <p className="text-xs text-zinc-450 mt-1">Configure default formatting symbols across reports and ledger balances</p>
+                    <span className="font-bold text-ink">Default Base Currency</span>
+                    <p className="text-xs text-ink-muted mt-1">Configure default formatting symbols across reports and ledger balances</p>
                   </div>
                   <select
                     value={settings.currency}
                     onChange={(e) => setSettings(prev => ({ ...prev, currency: e.target.value as any }))}
-                    className="border border-black p-2 text-xs bg-transparent uppercase tracking-wider w-36 outline-none cursor-pointer"
+                    className="border border-border-fine p-2 text-xs bg-transparent uppercase tracking-wider w-36 outline-none cursor-pointer text-ink"
                   >
                     <option value="PHP">PHP (₱)</option>
                     <option value="USD">USD ($)</option>
@@ -1578,14 +1605,14 @@ export default function App() {
                 {/* 2. Start of periods preference */}
                 <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <span className="font-bold text-black">Temporal Start Preferences</span>
-                    <p className="text-xs text-zinc-450 mt-1">Define starting days parameters for weekly/monthly calculations audits</p>
+                    <span className="font-bold text-ink">Temporal Start Preferences</span>
+                    <p className="text-xs text-ink-muted mt-1">Define starting days parameters for weekly/monthly calculations audits</p>
                   </div>
                   <div className="flex gap-2">
                     <select
                       value={settings.startOfWeek}
                       onChange={(e) => setSettings(prev => ({ ...prev, startOfWeek: e.target.value as any }))}
-                      className="border border-black p-2 text-xs bg-transparent uppercase tracking-wider outline-none cursor-pointer"
+                      className="border border-border-fine p-2 text-xs bg-transparent uppercase tracking-wider outline-none cursor-pointer text-ink"
                     >
                       <option value="Sunday">Sunday start</option>
                       <option value="Monday">Monday start</option>
@@ -1596,12 +1623,14 @@ export default function App() {
                 {/* 3. Conversion rates multiplier configuration */}
                 <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <span className="font-bold text-black">Manual Conversion Rate (USD / PHP)</span>
-                    <p className="text-xs text-zinc-450 mt-1">Configure live local Philippine conversion multiplier parameters for reference</p>
+                    <span className="font-bold text-ink">Manual Conversion Rate (USD / PHP)</span>
+                    <p className="text-xs text-ink-muted mt-1">Configure live local Philippine conversion multiplier parameters for reference</p>
                   </div>
                   <input
                     type="number"
                     step="0.01"
+                    min="1"
+                    max="1000"
                     value={settings.usdToPhpRate}
                     onChange={(e) => {
                       const val = Number(e.target.value);
@@ -1609,27 +1638,27 @@ export default function App() {
                         setSettings(prev => ({ ...prev, usdToPhpRate: val }));
                       }
                     }}
-                    className="border border-zinc-300 focus:border-black p-2 text-xs text-right font-bold w-32 outline-none font-tabular"
+                    className="border border-border-fine focus:border-black p-2 text-sm text-right font-bold w-40 outline-none font-tabular"
                   />
                 </div>
 
                 {/* 4. Data migration export/reset features mapping the mockup settings options */}
                 <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <span className="font-bold text-black">Workspace Operations &amp; Migration</span>
-                    <p className="text-xs text-zinc-500 mt-1">Export your offline transaction log, or reset the workspace to a blank state for production tracking</p>
+                    <span className="font-bold text-ink">Workspace Operations &amp; Migration</span>
+                    <p className="text-xs text-ink-muted mt-1">Export your offline transaction log, or reset the workspace to a blank state for production tracking</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <button
                       onClick={handleExportJSON}
-                      className="border border-black hover:bg-zinc-50 px-4 py-2 text-xs uppercase font-bold tracking-widest flex items-center gap-1.5"
+                      className="border border-black hover:bg-surface-low px-4 py-2 text-xs uppercase font-bold tracking-widest flex items-center gap-1.5"
                     >
                       <Download className="w-3.5 h-3.5" />
                       Export Backup
                     </button>
                     <button
                       onClick={handleResetData}
-                      className="border border-black hover:bg-zinc-100 text-black px-4 py-2 text-xs uppercase font-bold tracking-widest flex items-center gap-1.5"
+                      className="border border-black hover:bg-surface-mid text-ink px-4 py-2 text-xs uppercase font-bold tracking-widest flex items-center gap-1.5"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       Load Demo Sandbox
@@ -1646,7 +1675,7 @@ export default function App() {
               </div>
 
               {/* Developer copyright credit and disclaimer matches high-end minimalist print look */}
-              <div className="text-center text-[10px] text-zinc-400 font-bold uppercase tracking-widest space-y-2 py-8 opacity-60">
+              <div className="text-center text-[10px] text-ink-muted font-bold uppercase tracking-widest space-y-2 py-8 opacity-60">
                 <p>Synced with Local Storage Offline Database Cache</p>
                 <p>© 2026 Next Check Premium Personal Finance. Manual tracking only.</p>
               </div>
@@ -1659,18 +1688,18 @@ export default function App() {
       {/* --- MODAL 1: ADD TRANSACTION (Exactly styled to mockup screen 4) --- */}
       {isAddTransactionOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
-          <div className="bg-white w-full max-w-lg border border-border-fine flex flex-col max-h-[90vh] overflow-hidden animate-modalIn">
+          <div className="bg-surface w-full max-w-lg border border-border-fine flex flex-col max-h-[90vh] overflow-hidden animate-modalIn">
             
             {/* Modal Header */}
-            <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
+            <header className="flex justify-between items-center h-16 px-6 border-b border-border-fine">
               <button
                 type="button"
                 onClick={() => setIsAddTransactionOpen(false)}
                 className="hover:opacity-70 active:scale-95 transition-transform"
               >
-                <X className="w-5 h-5 text-black" />
+                <X className="w-5 h-5 text-ink" />
               </button>
-              <h1 className="text-xl font-bold tracking-tight text-black">Add Transaction</h1>
+              <h1 className="text-xl font-bold tracking-tight text-ink">Add Transaction</h1>
               <div className="w-5"></div> {/* spacer */}
             </header>
 
@@ -1679,7 +1708,7 @@ export default function App() {
               
               {/* Type selector toggle exactly matching mockup segmented item tabs */}
               <div className="flex justify-center">
-                <div className="inline-flex bg-zinc-100 p-1.5 border border-zinc-200 rounded-none">
+                <div className="inline-flex bg-surface-mid p-1.5 border border-border-fine rounded-none">
                   {(['Expense', 'Income', 'Transfer'] as const).map(t => (
                     <button
                       key={t}
@@ -1688,7 +1717,7 @@ export default function App() {
                       className={`px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-all duration-150 ${
                         txType === t
                           ? 'bg-black text-white'
-                          : 'text-zinc-500 hover:text-black hover:bg-zinc-50'
+                          : 'text-ink-muted hover:text-ink hover:bg-surface-low'
                       }`}
                     >
                       {t}
@@ -1699,9 +1728,9 @@ export default function App() {
 
               {/* Real time amount display mockup */}
               <div className="text-center font-tabular">
-                <label className="block text-[10px] text-zinc-400 uppercase tracking-widest font-bold mb-2">Amount</label>
+                <label className="block text-[10px] text-ink-muted uppercase tracking-widest font-bold mb-2">Amount</label>
                 <div className="relative inline-block w-full max-w-xs">
-                  <span className="absolute left-4 bottom-2 text-3xl font-extrabold text-zinc-400">
+                  <span className="absolute left-4 bottom-2 text-3xl font-extrabold text-ink-muted">
                     {txType === 'Income' ? '+' : txType === 'Transfer' ? '⇆' : '-'}₱
                   </span>
                   <input
@@ -1722,7 +1751,7 @@ export default function App() {
                 
                 {/* Account selector */}
                 <div className="space-y-1.5">
-                  <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">
+                  <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">
                     {txType === 'Transfer' ? 'Source Account (From)' : 'Account Source'}
                   </label>
                   <select
@@ -1741,7 +1770,7 @@ export default function App() {
                 {/* Destination Account only active on Transfer */}
                 {txType === 'Transfer' && (
                   <div className="space-y-1.5 animate-fadeIn">
-                    <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">
+                    <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">
                       Destination Account (To)
                     </label>
                     <select
@@ -1764,7 +1793,7 @@ export default function App() {
                 {/* Category Selector (Hidden on Transfer, default set automatically) */}
                 {txType !== 'Transfer' && (
                   <div className="space-y-1.5">
-                    <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Category</label>
+                    <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Category</label>
                     <select
                       value={txCategory}
                       onChange={(e) => setTxCategory(e.target.value)}
@@ -1780,7 +1809,7 @@ export default function App() {
                 {/* Date & Time Grid Row */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Date</label>
+                    <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Date</label>
                     <input
                       type="date"
                       required
@@ -1790,7 +1819,7 @@ export default function App() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Time</label>
+                    <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Time</label>
                     <input
                       type="time"
                       required
@@ -1803,7 +1832,7 @@ export default function App() {
 
                 {/* Optional note textbox entry */}
                 <div className="space-y-1.5">
-                  <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Optional Note</label>
+                  <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Optional Note</label>
                   <textarea
                     placeholder="What was this transaction for?"
                     rows={2}
@@ -1823,7 +1852,7 @@ export default function App() {
                   Save Transaction
                   <ArrowRight className="w-4 h-4 text-white" />
                 </button>
-                <p className="text-center text-[10px] text-zinc-400 font-bold uppercase tracking-widest mt-4 opacity-60">
+                <p className="text-center text-[10px] text-ink-muted font-bold uppercase tracking-widest mt-4 opacity-60">
                   Syncing with Local Storage Cache
                 </p>
               </div>
@@ -1835,11 +1864,11 @@ export default function App() {
       {/* --- MODAL 2: ADD CUSTOM ACCOUNT --- */}
       {isAddAccountOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
-          <div className="bg-white w-full max-w-md border border-border-fine flex flex-col animate-modalIn">
-            <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
-              <h3 className="text-lg font-bold text-black tracking-tight">Add Custom Account</h3>
+          <div className="bg-surface w-full max-w-md border border-border-fine flex flex-col animate-modalIn">
+            <header className="flex justify-between items-center h-16 px-6 border-b border-border-fine">
+              <h3 className="text-lg font-bold text-ink tracking-tight">Add Custom Account</h3>
               <button onClick={() => setIsAddAccountOpen(false)}>
-                <X className="w-5 h-5 text-black" />
+                <X className="w-5 h-5 text-ink" />
               </button>
             </header>
 
@@ -1848,12 +1877,12 @@ export default function App() {
               {/* Institution brand mapper dropdown */}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Financial Institution</label>
-                  <span className="text-[9px] text-zinc-500 uppercase font-black tracking-widest">TAP BRAND LOGO QUICK PICK</span>
+                  <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Financial Institution</label>
+                  <span className="text-[9px] text-ink-muted uppercase font-black tracking-widest">TAP BRAND LOGO QUICK PICK</span>
                 </div>
                 
                 {/* Popular Grid Quick Selectors with actual Logos */}
-                <div className="grid grid-cols-4 gap-2 border border-zinc-100 p-2 bg-zinc-50">
+                <div className="grid grid-cols-4 gap-2 border border-border-fine p-2 bg-surface-low">
                   {[
                     { id: 'gcash', label: 'GCash' },
                     { id: 'paymaya', label: 'Maya' },
@@ -1870,14 +1899,14 @@ export default function App() {
                       onClick={() => setAccInstitutionId(quick.id)}
                       className={`relative p-1.5 flex flex-col items-center justify-center border transition-all rounded-xs select-none ${
                         accInstitutionId === quick.id
-                          ? 'border-black bg-white scale-[1.04] shadow-xs ring-1 ring-black/10'
-                          : 'border-zinc-200 bg-white hover:bg-zinc-50'
+                          ? 'border-black bg-surface scale-[1.04] shadow-xs ring-1 ring-black/10'
+                          : 'border-border-fine bg-surface hover:bg-surface-low'
                       }`}
                     >
                       <div className="w-8 h-8 overflow-hidden shrink-0 mb-1">
                         <InstitutionLogo id={quick.id} />
                       </div>
-                      <span className="text-[8px] font-extrabold tracking-tight uppercase text-zinc-650">{quick.label}</span>
+                      <span className="text-[8px] font-extrabold tracking-tight uppercase text-ink">{quick.label}</span>
                     </button>
                   ))}
                 </div>
@@ -1885,7 +1914,7 @@ export default function App() {
                 <select
                   value={accInstitutionId}
                   onChange={(e) => setAccInstitutionId(e.target.value)}
-                  className="w-full bg-transparent border-b border-border-fine py-2.5 text-sm font-medium outline-none cursor-pointer text-black"
+                  className="w-full bg-transparent border-b border-border-fine py-2.5 text-sm font-medium outline-none cursor-pointer text-ink"
                 >
                   {PHILIPPINE_INSTITUTIONS.map(inst => (
                     <option key={inst.id} value={inst.id}>
@@ -1897,7 +1926,7 @@ export default function App() {
 
               {/* Name label */}
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Account Label Name</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Account Label Name</label>
                 <input
                   type="text"
                   required
@@ -1910,7 +1939,7 @@ export default function App() {
 
               {/* Account number / identifier */}
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Account Mask Number</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Account Mask Number</label>
                 <input
                   type="text"
                   placeholder="e.g. •••• 9021 or 0917 •••• 123"
@@ -1923,7 +1952,7 @@ export default function App() {
               {/* Balance & Currency row */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5 font-tabular">
-                  <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Balance Amount</label>
+                  <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Balance Amount</label>
                   <input
                     type="number"
                     step="0.01"
@@ -1935,7 +1964,7 @@ export default function App() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Currency</label>
+                  <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Currency</label>
                   <select
                     value={accCurrency}
                     onChange={(e) => setAccCurrency(e.target.value as any)}
@@ -1949,7 +1978,7 @@ export default function App() {
 
               {/* Account type category */}
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Account Class Type</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Account Class Type</label>
                 <select
                   value={accType}
                   onChange={(e) => setAccType(e.target.value as any)}
@@ -1981,11 +2010,11 @@ export default function App() {
       {/* --- MODAL 3: INTERNAL ACCOUNT TRANSFER QUICK TOOL --- */}
       {isTransferOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
-          <div className="bg-white w-full max-w-md border border-border-fine flex flex-col animate-modalIn">
-            <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
-              <h3 className="text-lg font-bold text-black tracking-tight">Internal Account Transfer</h3>
+          <div className="bg-surface w-full max-w-md border border-border-fine flex flex-col animate-modalIn">
+            <header className="flex justify-between items-center h-16 px-6 border-b border-border-fine">
+              <h3 className="text-lg font-bold text-ink tracking-tight">Internal Account Transfer</h3>
               <button onClick={() => setIsTransferOpen(false)}>
-                <X className="w-5 h-5 text-black" />
+                <X className="w-5 h-5 text-ink" />
               </button>
             </header>
 
@@ -1993,7 +2022,7 @@ export default function App() {
               
               {/* From accounts selection */}
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">From Source Account</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">From Source Account</label>
                 <select
                   value={transferFromId}
                   onChange={(e) => setTransferFromId(e.target.value)}
@@ -2009,7 +2038,7 @@ export default function App() {
 
               {/* To accounts selection */}
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">To Destination Target</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">To Destination Target</label>
                 <select
                   value={transferToId}
                   onChange={(e) => setTransferToId(e.target.value)}
@@ -2027,7 +2056,7 @@ export default function App() {
 
               {/* Amount value */}
               <div className="space-y-1.5 font-tabular">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Transfer Magnitude Balance</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Transfer Magnitude Balance</label>
                 <input
                   type="number"
                   step="0.01"
@@ -2041,7 +2070,7 @@ export default function App() {
 
               {/* Transfer explanation note */}
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Booking Details Note</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Booking Details Note</label>
                 <input
                   type="text"
                   placeholder="e.g. Bank load to GCASH"
@@ -2067,17 +2096,17 @@ export default function App() {
       {/* --- MODAL 4: NEW SAVINGS GOAL TARGET --- */}
       {isGoalModalOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-backdropIn">
-          <div className="bg-white w-full max-w-sm border border-border-fine flex flex-col animate-modalIn">
-            <header className="flex justify-between items-center h-16 px-6 border-b border-zinc-100">
-              <h3 className="text-base font-bold text-black tracking-tight">Create Milestone Savings Goal</h3>
+          <div className="bg-surface w-full max-w-sm border border-border-fine flex flex-col animate-modalIn">
+            <header className="flex justify-between items-center h-16 px-6 border-b border-border-fine">
+              <h3 className="text-base font-bold text-ink tracking-tight">Create Milestone Savings Goal</h3>
               <button onClick={() => setIsGoalModalOpen(false)}>
-                <X className="w-5 h-5 text-black" />
+                <X className="w-5 h-5 text-ink" />
               </button>
             </header>
 
             <form onSubmit={handleAddGoal} className="p-6 space-y-5">
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Goal Name</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Goal Name</label>
                 <input
                   type="text"
                   required
@@ -2090,7 +2119,7 @@ export default function App() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5 font-tabular">
-                  <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Target Value</label>
+                  <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Target Value</label>
                   <input
                     type="number"
                     required
@@ -2101,7 +2130,7 @@ export default function App() {
                   />
                 </div>
                 <div className="space-y-1.5 font-tabular">
-                  <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Starting Saved</label>
+                  <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Starting Saved</label>
                   <input
                     type="number"
                     placeholder="Optional starting value"
@@ -2113,7 +2142,7 @@ export default function App() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[9px] text-zinc-400 uppercase tracking-widest font-bold">Future Target Date</label>
+                <label className="block text-[9px] text-ink-muted uppercase tracking-widest font-bold">Future Target Date</label>
                 <input
                   type="date"
                   value={goalTargetDate}
@@ -2156,25 +2185,25 @@ export default function App() {
                 const moSave = remaining / (days / 30.43);
 
                 return (
-                  <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-none space-y-1.5 text-xs text-zinc-650 border-dashed">
-                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 block pb-1 border-b border-zinc-200/50">LIVE ESTIMATOR PREVIEW</span>
+                  <div className="bg-surface-low border border-border-fine p-3 rounded-none space-y-1.5 text-xs text-ink border-dashed">
+                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-ink-muted block pb-1 border-b border-border-fine/50">LIVE ESTIMATOR PREVIEW</span>
                     <div className="flex justify-between items-center text-[11px]">
                       <span>Daily savings required:</span>
-                      <strong className="text-black">{formatCurrencyValue(daySave, settings.currency)}/day</strong>
+                      <strong className="text-ink">{formatCurrencyValue(daySave, settings.currency)}/day</strong>
                     </div>
                     {days >= 7 && (
                       <div className="flex justify-between items-center text-[11px]">
                         <span>Weekly savings required:</span>
-                        <strong className="text-black">{formatCurrencyValue(wkSave, settings.currency)}/wk</strong>
+                        <strong className="text-ink">{formatCurrencyValue(wkSave, settings.currency)}/wk</strong>
                       </div>
                     )}
                     {days >= 30 && (
                       <div className="flex justify-between items-center text-[11px]">
                         <span>Monthly savings required:</span>
-                        <strong className="text-black">{formatCurrencyValue(moSave, settings.currency)}/mo</strong>
+                        <strong className="text-ink">{formatCurrencyValue(moSave, settings.currency)}/mo</strong>
                       </div>
                     )}
-                    <div className="text-[9px] text-zinc-400 uppercase tracking-widest text-right font-black pt-1">
+                    <div className="text-[9px] text-ink-muted uppercase tracking-widest text-right font-black pt-1">
                       Runway is {days} calendar days
                     </div>
                   </div>
@@ -2195,13 +2224,13 @@ export default function App() {
       )}
 
       {/* Persistent Bottom Mobile Navigation Bar matching screens 2 & 4 */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border-fine flex justify-around items-center h-20 px-4">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface border-t border-border-fine flex justify-around items-center h-20 px-4">
         
         {/* Dashboard Home selection link */}
         <button
           onClick={() => setCurrentView('dashboard')}
           className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            currentView === 'dashboard' ? 'text-black font-extrabold scale-110' : 'text-zinc-400'
+            currentView === 'dashboard' ? 'text-ink font-extrabold scale-110' : 'text-ink-muted'
           }`}
         >
           <LayoutDashboard className="w-5.5 h-5.5" />
@@ -2212,7 +2241,7 @@ export default function App() {
         <button
           onClick={() => setCurrentView('accounts')}
           className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            currentView === 'accounts' ? 'text-black font-extrabold scale-110' : 'text-zinc-400'
+            currentView === 'accounts' ? 'text-ink font-extrabold scale-110' : 'text-ink-muted'
           }`}
         >
           <Wallet className="w-5.5 h-5.5" />
@@ -2234,7 +2263,7 @@ export default function App() {
         <button
           onClick={() => setCurrentView('budget')}
           className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            currentView === 'budget' ? 'text-black font-extrabold scale-110' : 'text-zinc-400'
+            currentView === 'budget' ? 'text-ink font-extrabold scale-110' : 'text-ink-muted'
           }`}
         >
           <PiggyBank className="w-5.5 h-5.5" />
@@ -2245,7 +2274,7 @@ export default function App() {
         <button
           onClick={() => setCurrentView('settings')}
           className={`flex flex-col items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            currentView === 'settings' ? 'text-black font-bold scale-110' : 'text-zinc-400'
+            currentView === 'settings' ? 'text-ink font-bold scale-110' : 'text-ink-muted'
           }`}
         >
           <Settings className="w-5.5 h-5.5" />
