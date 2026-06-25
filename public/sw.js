@@ -1,4 +1,4 @@
-const CACHE_NAME = 'next-check-v2';
+const CACHE_NAME = 'next-check-v3';
 const PRECACHE_URLS = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
