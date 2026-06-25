@@ -665,8 +665,8 @@ export default function App() {
       {/* 280px left Fixed Sidebar for Desktop/Web navigations */}
       <aside className="fixed hidden md:flex left-0 top-0 h-screen w-[280px] bg-surface border-r border-border-fine flex-col py-8 px-6 z-40">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-ink tracking-tight leading-none">Next Check</h1>
-          <p className="text-[10px] text-ink-muted font-semibold tracking-widest uppercase mt-1">Premium Finance</p>
+          <h1 className="text-3xl font-bold text-ink tracking-tight leading-none">Otan Wallet</h1>
+          <p className="text-[10px] text-ink-muted font-semibold tracking-widest uppercase mt-1">Personal Finance App</p>
         </div>
 
         {/* Tab Selection Navigation */}
@@ -747,8 +747,8 @@ export default function App() {
       {/* Persistent Mobile Sticky Header */}
       <header className="fixed md:hidden top-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border-fine px-5 h-16 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-ink leading-none">Next Check</h1>
-          <p className="text-[8px] text-ink-muted font-bold tracking-widest uppercase">Premium Finance</p>
+          <h1 className="text-xl font-bold tracking-tight text-ink leading-none">Otan Wallet</h1>
+          <p className="text-[8px] text-ink-muted font-bold tracking-widest uppercase">Personal Finance App</p>
         </div>
         <div className="flex items-center gap-4">
           <button
@@ -814,7 +814,7 @@ export default function App() {
                   </div>
                   <h3 className="text-xl font-extrabold text-ink tracking-tight mb-2">Workspace Unconfigured</h3>
                   <p className="text-ink-muted text-xs leading-relaxed max-w-sm mb-8">
-                    Welcome to Next Check. Your premium offline finance log is ready. Start by opening your first custom wallet or seed our premium mockup sandbox.
+                    Welcome to Otan Wallet. Your premium offline finance log is ready. Start by opening your first custom wallet or seed our premium mockup sandbox.
                   </p>
                   <div className="flex flex-col gap-3 w-full">
                     <button
@@ -1750,7 +1750,7 @@ export default function App() {
               {/* Developer copyright credit and disclaimer matches high-end minimalist print look */}
               <div className="text-center text-[10px] text-ink-muted font-bold uppercase tracking-widest space-y-2 py-8 opacity-60">
                 <p>Synced with Local Storage Offline Database Cache</p>
-                <p>© 2026 Next Check Premium Personal Finance. Manual tracking only.</p>
+                <p>© 2026 Otan Wallet Personal Finance App. Manual tracking only.</p>
               </div>
             </div>
           )}
