@@ -210,10 +210,33 @@ export default function App() {
       }, 0);
   }, [accounts, settings.usdToPhpRate]);
 
-  // Income computation within the active month (2026-10 by default because screenshots focus on October)
+  // Helper: zero-padded YYYY-MM-DD key for a Date, used for lexical comparison against tx.date
+  const toDateKey = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  // Resolve the active reporting window's start date based on the MONTH/QUARTER/YEAR segment control.
+  // Previously this was hardcoded to '2026-10', so real transactions logged on any other date never counted.
+  const periodStartKey = useMemo(() => {
+    const now = new Date();
+    let start: Date;
+    if (dashboardPeriod === 'MONTH') {
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else if (dashboardPeriod === 'QUARTER') {
+      start = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+    } else {
+      start = new Date(now.getFullYear(), 0, 1);
+    }
+    return toDateKey(start);
+  }, [dashboardPeriod]);
+
+  // Income computation within the active reporting period (respects the Month/Quarter/Year toggle)
   const monthlyIncomePHP = useMemo(() => {
     return transactions
-      .filter(tx => tx.type === 'Income' && tx.date.startsWith('2026-10'))
+      .filter(tx => tx.type === 'Income' && tx.date >= periodStartKey)
       .reduce((sum, tx) => {
         const acc = accounts.find(a => a.id === tx.sourceAccountId);
         if (acc && acc.currency === 'USD') {
@@ -221,12 +244,12 @@ export default function App() {
         }
         return sum + tx.amount;
       }, 0);
-  }, [transactions, accounts, settings.usdToPhpRate]);
+  }, [transactions, accounts, settings.usdToPhpRate, periodStartKey]);
 
-  // Expenses computation within the active month (2026-10)
+  // Expenses computation within the active reporting period (respects the Month/Quarter/Year toggle)
   const monthlyExpensesPHP = useMemo(() => {
     return transactions
-      .filter(tx => tx.type === 'Expense' && tx.date.startsWith('2026-10'))
+      .filter(tx => tx.type === 'Expense' && tx.date >= periodStartKey)
       .reduce((sum, tx) => {
         const acc = accounts.find(a => a.id === tx.sourceAccountId);
         if (acc && acc.currency === 'USD') {
@@ -234,7 +257,7 @@ export default function App() {
         }
         return sum + tx.amount;
       }, 0);
-  }, [transactions, accounts, settings.usdToPhpRate]);
+  }, [transactions, accounts, settings.usdToPhpRate, periodStartKey]);
 
   // Savings rate
   const savingsRate = useMemo(() => {
@@ -243,11 +266,14 @@ export default function App() {
     return Math.max(0, Math.round(rate));
   }, [monthlyIncomePHP, monthlyExpensesPHP]);
 
-  // Category aggregate spending for Progress Bars
+  // Category aggregate spending for Progress Bars - scoped to the current calendar month so it
+  // matches "Monthly" budgets and doesn't silently keep accumulating forever.
   const categorySpending = useMemo(() => {
+    const now = new Date();
+    const monthStartKey = toDateKey(new Date(now.getFullYear(), now.getMonth(), 1));
     const spendingMap: Record<string, number> = {};
     transactions
-      .filter(tx => tx.type === 'Expense')
+      .filter(tx => tx.type === 'Expense' && tx.date >= monthStartKey)
       .forEach(tx => {
         const acc = accounts.find(a => a.id === tx.sourceAccountId);
         const phpAmt = acc && acc.currency === 'USD' ? tx.amount * settings.usdToPhpRate : tx.amount;
@@ -255,6 +281,41 @@ export default function App() {
       });
     return spendingMap;
   }, [transactions, accounts, settings.usdToPhpRate]);
+
+  // Real (non-mocked) cash flow for the trailing 6 months, used by the Dashboard bar chart.
+  // Replaces hardcoded sample figures so the chart accurately reflects (and empties out after) a data wipe.
+  const cashFlowMonths = useMemo(() => {
+    const now = new Date();
+    const months = Array.from({ length: 6 }, (_, idx) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (5 - idx), 1);
+      return {
+        key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
+        label: d.toLocaleDateString('en-US', { month: 'short' }),
+        income: 0,
+        expense: 0,
+      };
+    });
+    transactions.forEach(tx => {
+      const txKey = tx.date.slice(0, 7);
+      const bucket = months.find(m => m.key === txKey);
+      if (!bucket) return;
+      const acc = accounts.find(a => a.id === tx.sourceAccountId);
+      const phpAmt = acc && acc.currency === 'USD' ? tx.amount * settings.usdToPhpRate : tx.amount;
+      if (tx.type === 'Income') bucket.income += phpAmt;
+      else if (tx.type === 'Expense') bucket.expense += phpAmt;
+    });
+    return months;
+  }, [transactions, accounts, settings.usdToPhpRate]);
+
+  // Up to 2 highest-balance active accounts, used for the Dashboard's featured account widgets.
+  // Replaces two permanently hardcoded "BDO" / "GCash" demo cards that used to show fake balances
+  // even after a reset/wipe, regardless of which accounts actually exist.
+  const featuredAccounts = useMemo(() => {
+    return [...accounts]
+      .filter(a => !a.isArchived)
+      .sort((a, b) => b.balance - a.balance)
+      .slice(0, 2);
+  }, [accounts]);
 
   // Category list for selection options
   const transactionCategories = [
@@ -807,23 +868,30 @@ export default function App() {
                       {formatCurrencyValue(totalBalancePHP, dashboardCurrency)}
                     </h3>
 
-                    {/* Percentage trend indicator line */}
-                    <div className="flex items-center gap-1.5 text-emerald-600">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-xs font-semibold tracking-tight">+12.4% from last month</span>
+                    {/* Net cash flow indicator line - derived from real transactions in the selected period, not a fabricated figure */}
+                    <div className={`flex items-center gap-1.5 ${monthlyIncomePHP - monthlyExpensesPHP >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                      <TrendingUp className={`w-4 h-4 ${monthlyIncomePHP - monthlyExpensesPHP >= 0 ? '' : 'rotate-180'}`} />
+                      <span className="text-xs font-semibold tracking-tight">
+                        {monthlyIncomePHP - monthlyExpensesPHP >= 0 ? '+' : ''}
+                        {formatCurrencyValue(monthlyIncomePHP - monthlyExpensesPHP, dashboardCurrency)} net this {dashboardPeriod.toLowerCase()}
+                      </span>
                     </div>
                   </div>
 
                   {/* Summary metric rows */}
                   <div className="grid grid-cols-3 gap-2 md:gap-4 mt-8 pt-6 border-t border-border-fine">
                     <div className="min-w-0">
-                      <p className="text-[9px] text-ink-muted uppercase tracking-widest font-bold mb-1 truncate">Monthly Income</p>
+                      <p className="text-[9px] text-ink-muted uppercase tracking-widest font-bold mb-1 truncate">
+                        {dashboardPeriod === 'MONTH' ? 'Monthly' : dashboardPeriod === 'QUARTER' ? 'Quarterly' : 'Yearly'} Income
+                      </p>
                       <p className="text-sm md:text-xl font-bold text-ink font-tabular truncate">
                         {formatCurrencyValue(monthlyIncomePHP, dashboardCurrency)}
                       </p>
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[9px] text-ink-muted uppercase tracking-widest font-bold mb-1 truncate">Monthly Expenses</p>
+                      <p className="text-[9px] text-ink-muted uppercase tracking-widest font-bold mb-1 truncate">
+                        {dashboardPeriod === 'MONTH' ? 'Monthly' : dashboardPeriod === 'QUARTER' ? 'Quarterly' : 'Yearly'} Expenses
+                      </p>
                       <p className="text-sm md:text-xl font-bold text-ink font-tabular truncate">
                         {formatCurrencyValue(monthlyExpensesPHP, dashboardCurrency)}
                       </p>
@@ -835,31 +903,38 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Featured Institutional widgets matching screenshot 1 right column */}
+                {/* Featured Account widgets - now derived from the user's real, highest-balance active accounts.
+                    These used to be permanently hardcoded "BDO" and "GCash" demo cards that kept showing fake
+                    balances even after a reset/wipe, regardless of whether those accounts actually existed. */}
                 <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
-                  {/* BDO Featured Visa Card mockup */}
-                  <div className="bg-[#002855] text-white p-6 flex flex-col justify-between h-[162px] shadow-sm relative overflow-hidden group">
-                    <div className="flex justify-between items-start">
-                      <span className="text-[9px] uppercase tracking-widest opacity-80 font-bold">BDO GOLD VISA</span>
-                      <CreditCard className="w-5 h-5 text-white/90" />
+                  {featuredAccounts.map(acc => {
+                    const meta = getInstitutionMeta(acc.institution);
+                    const phpBalance = acc.currency === 'USD' ? acc.balance * settings.usdToPhpRate : acc.balance;
+                    return (
+                      <div
+                        key={acc.id}
+                        style={{ backgroundColor: meta.bgColor, color: meta.textColor }}
+                        className="p-6 flex flex-col justify-between h-[162px] shadow-sm relative overflow-hidden group"
+                      >
+                        <div className="flex justify-between items-start">
+                          <span className="text-[9px] uppercase tracking-widest opacity-80 font-bold truncate pr-2">
+                            {acc.name}
+                          </span>
+                          <CreditCard className="w-5 h-5 opacity-90 shrink-0" />
+                        </div>
+                        <div>
+                          <p className="font-mono text-xs tracking-wider opacity-90 mb-2">{acc.accountNumber}</p>
+                          <p className="text-xl md:text-2xl font-black">{formatCurrencyValue(phpBalance, dashboardCurrency)}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {featuredAccounts.length === 0 && (
+                    <div className="border-2 border-dashed border-border-fine flex-1 min-h-[162px] flex flex-col items-center justify-center text-center p-6">
+                      <Wallet className="w-6 h-6 text-ink-faint mb-2" />
+                      <span className="text-[10px] text-ink-muted uppercase tracking-widest font-bold">No Active Accounts</span>
                     </div>
-                    <div>
-                      <p className="font-mono text-xs tracking-wider opacity-90 mb-2">**** **** **** 8821</p>
-                      <p className="text-xl md:text-2xl font-black">{formatCurrencyValue(842500, dashboardCurrency)}</p>
-                    </div>
-                  </div>
-
-                  {/* GCash featured wallet mockup */}
-                  <div className="bg-[#1F7AFF] text-white p-6 flex flex-col justify-between h-[162px] shadow-sm relative overflow-hidden group">
-                    <div className="flex justify-between items-start">
-                      <span className="text-[9px] uppercase tracking-widest opacity-80 font-bold">GCASH WALLET</span>
-                      <Wallet className="w-5 h-5 text-white/90" />
-                    </div>
-                    <div>
-                      <p className="font-mono text-xs tracking-wider opacity-90 mb-2">0917 *** 9922</p>
-                      <p className="text-xl md:text-2xl font-black">{formatCurrencyValue(15240.15, dashboardCurrency)}</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </section>
 
@@ -882,40 +957,35 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Layout Columns representing bars dynamically in highly visual magazine design */}
+                  {/* Layout Columns representing real trailing-6-month income/expense totals from actual transactions */}
                   <div className="h-64 flex items-end justify-between gap-3 font-tabular">
-                    {[
-                      { m: 'Jan', income: 15400, expense: 6120 },
-                      { m: 'Feb', income: 18400, expense: 7120 },
-                      { m: 'Mar', income: 14200, expense: 4200 },
-                      { m: 'Apr', income: 21900, expense: 9120 },
-                      { m: 'May', income: 16500, expense: 8120 },
-                      { m: 'Jun', income: monthlyIncomePHP || 18400, expense: monthlyExpensesPHP || 6120 }
-                    ].map((bar, i) => {
-                      const maxVal = 25000;
-                      const incHeight = Math.min(90, (bar.income / maxVal) * 100);
-                      const expHeight = Math.min(90, (bar.expense / maxVal) * 100);
-                      
-                      return (
-                        <div key={i} className="flex-1 flex flex-col font-sans group items-center">
-                          <div className="w-full flex justify-center items-end gap-1 h-44 relative bg-surface-low border-t border-border-fine pt-2 px-1">
-                            {/* Income Bar (pure black) */}
-                            <div
-                              style={{ height: `${incHeight}%` }}
-                              className="w-full bg-black hover:opacity-85 duration-100 cursor-pointer self-end"
-                              title={`Income: ₱${bar.income}`}
-                            ></div>
-                            {/* Expense Bar (gray) */}
-                            <div
-                              style={{ height: `${expHeight}%` }}
-                              className="w-full bg-ink-faint hover:opacity-80 duration-100 cursor-pointer self-end"
-                              title={`Expense: ₱${bar.expense}`}
-                            ></div>
+                    {(() => {
+                      const maxVal = Math.max(...cashFlowMonths.map(m => Math.max(m.income, m.expense)), 1);
+                      return cashFlowMonths.map((bar, i) => {
+                        const incHeight = Math.min(100, (bar.income / maxVal) * 100);
+                        const expHeight = Math.min(100, (bar.expense / maxVal) * 100);
+
+                        return (
+                          <div key={bar.key + i} className="flex-1 flex flex-col font-sans group items-center">
+                            <div className="w-full flex justify-center items-end gap-1 h-44 relative bg-surface-low border-t border-border-fine pt-2 px-1">
+                              {/* Income Bar (pure black) */}
+                              <div
+                                style={{ height: `${incHeight}%` }}
+                                className="w-full bg-black hover:opacity-85 duration-100 cursor-pointer self-end"
+                                title={`Income: ${formatCurrencyValue(bar.income)}`}
+                              ></div>
+                              {/* Expense Bar (gray) */}
+                              <div
+                                style={{ height: `${expHeight}%` }}
+                                className="w-full bg-ink-faint hover:opacity-80 duration-100 cursor-pointer self-end"
+                                title={`Expense: ${formatCurrencyValue(bar.expense)}`}
+                              ></div>
+                            </div>
+                            <span className="text-[10px] text-ink-muted uppercase tracking-wider font-bold mt-3 block">{bar.label}</span>
                           </div>
-                          <span className="text-[10px] text-ink-muted uppercase tracking-wider font-bold mt-3 block">{bar.m}</span>
-                        </div>
-                      );
-                    })}
+                        );
+                      });
+                    })()}
                   </div>
                 </div>
 
@@ -925,11 +995,11 @@ export default function App() {
                     <h4 className="text-xl font-bold text-ink tracking-tight mb-8">Budget Progress</h4>
                     
                     <div className="space-y-6">
-                      {budgets.slice(1, 4).map(b => {
+                      {budgets.filter(b => b.category !== 'Overall').slice(0, 3).map(b => {
                         const spent = categorySpending[b.category] || 0;
-                        const remainder = Math.max(0, b.amount - spent);
-                        const pctStr = `${Math.min(100, Math.round((spent / b.amount) * 100))}%`;
-                        const isNearingLimit = spent / b.amount >= 0.85;
+                        const ratio = b.amount > 0 ? spent / b.amount : 0;
+                        const pctStr = `${Math.min(100, Math.round(ratio * 100))}%`;
+                        const isNearingLimit = ratio >= 0.85;
 
                         return (
                           <div key={b.id} className="space-y-2">
@@ -950,6 +1020,9 @@ export default function App() {
                           </div>
                         );
                       })}
+                      {budgets.filter(b => b.category !== 'Overall').length === 0 && (
+                        <p className="text-xs text-ink-muted uppercase tracking-wider text-center py-4">No budgets set yet</p>
+                      )}
                     </div>
                   </div>
 
@@ -1246,7 +1319,7 @@ export default function App() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-tabular">
                 {budgets.map(b => {
                   const spent = categorySpending[b.category] || 0;
-                  const ratio = Math.min(1, spent / b.amount);
+                  const ratio = b.amount > 0 ? Math.min(1, spent / b.amount) : 0;
                   const isSafe = ratio < 0.75;
                   const isDanger = ratio >= 0.85;
 
@@ -1325,7 +1398,7 @@ export default function App() {
 
                 <div className="space-y-6 font-tabular">
                   {savingsGoals.map(goal => {
-                    const pct = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100));
+                    const pct = goal.targetAmount > 0 ? Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) : 0;
                     return (
                       <div key={goal.id} className="border-b border-border-fine pb-5 last:border-0 last:pb-0">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
@@ -1516,9 +1589,9 @@ export default function App() {
                     {accounts.map(acc => {
                       const ratio = totalBalancePHP > 0 ? (acc.balance / totalBalancePHP) * 100 : 0;
                       return (
-                        <div key={acc.id} className="flex justify-between items-center text-xs">
-                          <span className="font-semibold text-ink">{acc.name}</span>
-                          <div className="flex items-center gap-3 w-48 font-tabular">
+                        <div key={acc.id} className="flex justify-between items-center gap-3 text-xs">
+                          <span className="font-semibold text-ink truncate min-w-0">{acc.name}</span>
+                          <div className="flex items-center gap-3 w-28 sm:w-48 font-tabular shrink-0">
                             <div className="h-2 flex-1 bg-surface-mid overflow-hidden">
                               <div style={{ width: `${ratio}%` }} className="h-full bg-black"></div>
                             </div>

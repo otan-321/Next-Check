@@ -48,6 +48,17 @@
   }
 }
 
+/* iOS Safari auto-zooms the whole page when a focused input/select/textarea has a computed
+   font-size below 16px. Several form fields in this app use text-xs/text-sm (12-14px), which
+   triggered an unwanted zoom-and-jump every time a user tapped into a field on mobile. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 /* Premium view transition */
 @keyframes fadeIn {
   from {
